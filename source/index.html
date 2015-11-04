@@ -7,10 +7,9 @@
         font-size:18pt;
     }
 </style>
-<title>Getting File Information</title>
+<title>Working With Multiple Files</title>
 <script type="text/javascript">
     function init() {
-        // check to see if this browser supports the File APIs we need
         var bHaveFileAPI = (window.File && window.FileReader);
 
         if (!bHaveFileAPI) {
@@ -18,34 +17,30 @@
             return;
         }
 
-        // if the browser supports the necessary features, enable the UI
         document.getElementById("fileElem").addEventListener("change", onFileChanged);
     }
 
-    // when the user selects a file, this function will be called
     function onFileChanged(theEvt) {
-        // get the file from the event information
-        var thefile = theEvt.target.files[0];
+        var files = theEvt.target.files;
+        var totalBytes = 0;
 
-        // display the file data 
-        document.getElementById("filename").innerHTML = thefile.name;
-        document.getElementById("filesize").innerHTML = thefile.size;
-        document.getElementById("filetype").innerHTML = thefile.type;
-
-        document.getElementById('filedata').innerHTML += fileInfo;
+        for (var i = 0; i < files.length; i++) {
+            var fileInfo = "<p>File name: " + files[i].name + "; size: " + files[i].size + "; type: " + files[i].type + "</p>";
+            totalBytes += files[i].size;
+            document.getElementById('filedata').innerHTML += fileInfo;
+        }
+        document.getElementById('filedata').innerHTML += "<p>Total of " + files.length + " files, " + totalBytes + " bytes.";
     }
 
     window.addEventListener("load", init);
 </script>
 </head>
 <body>
-<h1>Getting File Information</h1>
+<h1>Handling Multiple Files</h1>
 <form action="">
 <label>Select a file: </label>
-<input type="file" name="files" id="fileElem" />
+<input type="file" name="files" id="fileElem" multiple="multiple"/>
 </form>
-<p>File Name: <span id="filename"></span></p>
-<p>File Size: <span id="filesize"></span></p>
-<p>File Type: <span id="filetype"></span></p>
+<div id="filedata"></div>
 </body>
 </html>
