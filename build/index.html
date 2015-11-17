@@ -7,7 +7,7 @@
         font-size:18pt;
     }
 </style>
-<title>Reading a Text File</title>
+<title>Reading a File as a Data URL</title>
 <script type="text/javascript">
     function init() {
         var bHaveFileAPI = (window.File && window.FileReader);
@@ -23,32 +23,34 @@
     function onFileChanged(theEvt) {
         var thefile = theEvt.target.files[0];
 
-        // check to see if it is text
-        if (thefile.type != "text/plain") {
-            document.getElementById('filecontents').innerHTML = "No text file chosen";
+        // check to see if it is image
+        if (!thefile.type.match("image.*")) {
             return;
         }
 
         var reader = new FileReader();
 
         reader.onload = function (evt) {
-            var resultText = evt.target.result;
-            document.getElementById('filecontents').innerHTML = resultText;
+            var resultdata = evt.target.result;
+
+            var img = new Image();
+            img.src = event.target.result;
+            document.getElementById('filecontents').appendChild(img);
         }
 
-        reader.readAsText(thefile);
+        reader.readAsDataURL(thefile);
     }
 
     window.addEventListener("load", init);
 </script>
 </head>
 <body>
-<h1>Reading File Data as Text</h1>
+<h1>Reading File Content as a Data URL</h1>
 <form action="">
 <label>Select a file: </label>
 <input type="file" name="files" id="fileElem" />
 </form>
 <p>File contents: </p>
-<textarea cols="80" rows="10" id="filecontents"></textarea>
+<div id="filecontents"></div>
 </body>
 </html>
